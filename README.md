@@ -9,9 +9,9 @@ randomized lottery determines the winner of the lottery; that winning process is
 for that time slice.
 
 # Objectives
-  To gain further knowledge of a real kernel, xv6.
-  To familiarize yourself with a scheduler.
-  To change that scheduler to a new algorithm.
+  1) To gain further knowledge of a real kernel, xv6.
+  2) To familiarize yourself with a scheduler.
+  3) To change that scheduler to a new algorithm.
   
 # Main Tasks
 You'll need three new system calls to implement this scheduler.
@@ -58,11 +58,11 @@ You'll need three new system calls to implement this scheduler.
     tickets, and calls fork() to create a child process, the child should also get 10 tickets.
     
 # Supplied Test Programs
-  # ps.c
+  # 1) ps.c
     We have supplied ps.c which is a test program which runs getpinfo and outputs the
      information in the struct.
      
-  # lotteryTest.c
+  # 2) lotteryTest.c
     We have supplied lotteryTest.c which is a test program which:
       • takes as command line arguments an amount of time to run for followed by a list of numbers
       of tickets to assign to each subprocess. Each subprocess runs an infinite loop and is killed
@@ -82,28 +82,28 @@ You'll need three new system calls to implement this scheduler.
     add _ps and _lotteryTest to the UPROGS definition in Makefile.
     
 # Hints
-  # Reading on Lottery Scheduling
+  # 1) Reading on Lottery Scheduling
     1. For an alternate explanation to the lottery scheduler, see Chapter 9 of Arpaci-Dusseau
     (especially Figure 9.1).
-  # Reading on xv6’s scheduler
+  # 2) Reading on xv6’s scheduler
     1. Read Chapter 5 of the xv6 book for documentation on xv6’s existing scheduler.
-  # Suggested order of operations
+  # 3) Suggested order of operations
     1. Implement settickets , but don’t actually use ticket counts for anything.
     2. Implement getpinfo . Use the ps.c to verify that it works.
     3. Add tracking of the number of ticks a process runs. Use the ps.c to verify that it works.
     4. Implement the lottery scheduling algorithm. Use the lotteryTest.c to test it.
-  # Tracking the number of ticks a process has been running
+  # 4) Tracking the number of ticks a process has been running
     1. proc.h contains xv6’s process control block, to which you should add a member variable
     to track the number of ticks a process has used.
     2. You may need to modify fork (in proc.c) or related functions to make sure the tick
     count and the number of tickets are initialized correctly.
-  # Adding settickets
+  # 5) Adding settickets
     1. You can use argint to retrieve the integer argument to your system call.
     (Making sys_setticketstake an argument will not work.)
     2. Like for tracking the number of ticks a process has been running, you will need to edit the
     process control block in proc.h .
     3. Follow the example of similar system calls in sysproc.c.
-  # Adding getpinfo
+  # 6) Adding getpinfo
     1. You can use the argptr to retrieve the pointer argument in your system call handler.
     2. You should iterate through the process list ptable , skipping over UNUSED processes.
     3. Look at the code for kill in proc.c for an example of how to search through the list of
@@ -112,7 +112,7 @@ You'll need three new system calls to implement this scheduler.
     acquire ptable.lock and afterwards you should release it. You can see an example of
     this in kill in proc.c. This will keep you from running into problems if a process is
     removed while you are iterating through the process table.
-  # Adding the lottery scheduling algorithm
+  # 7) Adding the lottery scheduling algorithm
     1. You will need to add a psuedorandom number generator to the kernel. We’ve supplied a
     Multiply-with-carry pseudorandom number generator (random.h). To use it, you will
     need to initialize it first with srand(seed)and then call rand() % (MAX + 1),
@@ -128,7 +128,7 @@ You'll need three new system calls to implement this scheduler.
     5. When there are no runnable processes, your scheduler should release the process table lock
     to give interrupts (like for keypresses) a chance to make programs runnable, then re-acquire
     that lock and iterate through the process table again.
-  # Identifying panics
+  # 8) Identifying panics
     1. If xv6 prints a message containing something like panic: acquire, this means that
     something called panic("acquire"); . The panic() function stops the OS, printing
     out an error message. Generally, these panics are caused by assertions in the xv6 code,
