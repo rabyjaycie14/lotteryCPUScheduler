@@ -15,13 +15,13 @@ for that time slice.
   
 # Main Tasks
 You'll need three new system calls to implement this scheduler.
-   # System call, settickets
-      The first is int settickets(int number), which sets the number of tickets of the calling process.
-      By default, processes should have 10 tickets. You can assume that the maximum number of
-      tickets per process is 100000. The number of tickets should be inherited by children created via
-      fork. This routine should return 0 if successful, and -1 otherwise (if, for example, the caller
-      passes in a number less than one or more than 100000).
-    
+     # System call, settickets
+        The first is int settickets(int number), which sets the number of tickets of the calling process.
+        By default, processes should have 10 tickets. You can assume that the maximum number of
+        tickets per process is 100000. The number of tickets should be inherited by children created via
+        fork. This routine should return 0 if successful, and -1 otherwise (if, for example, the caller
+        passes in a number less than one or more than 100000).
+
    # System call, getpinfo
       The second is int getpinfo(struct pstat *). This routine returns some information about all
       running processes, including how many times each has been chosen to run and the process ID of
