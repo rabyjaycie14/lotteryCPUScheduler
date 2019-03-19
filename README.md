@@ -15,14 +15,14 @@ for that time slice.
   
 # Main Tasks
 You'll need three new system calls to implement this scheduler.
-     # System call, settickets
-        The first is int settickets(int number), which sets the number of tickets of the calling process.
-        By default, processes should have 10 tickets. You can assume that the maximum number of
-        tickets per process is 100000. The number of tickets should be inherited by children created via
-        fork. This routine should return 0 if successful, and -1 otherwise (if, for example, the caller
-        passes in a number less than one or more than 100000).
+  System call, settickets
+      The first is int settickets(int number), which sets the number of tickets of the calling process.
+      By default, processes should have 10 tickets. You can assume that the maximum number of
+      tickets per process is 100000. The number of tickets should be inherited by children created via
+      fork. This routine should return 0 if successful, and -1 otherwise (if, for example, the caller
+      passes in a number less than one or more than 100000).
 
-   # System call, getpinfo
+  System call, getpinfo
       The second is int getpinfo(struct pstat *). This routine returns some information about all
       running processes, including how many times each has been chosen to run and the process ID of
       each. You can use this system call to build a variant of the command line program ps, which can
@@ -30,7 +30,7 @@ You'll need three new system calls to implement this scheduler.
       change this structure, and must use it exactly as is. This routine should return 0 if successful, and
       -1 otherwise (if, for example, a bad or NULL pointer is passed into the kernel).
     
-    The structure should look like what you see here, in a file you'll have to include called pstat.h:
+      The structure should look like what you see here, in a file you'll have to include called pstat.h:
         #ifndef _PSTAT_H_
         #define _PSTAT_H_
 
@@ -45,11 +45,11 @@ You'll need three new system calls to implement this scheduler.
         };
         #endif // _PSTAT_H_
         
-   # System call, yield
+  System call, yield
     The third system is int yield(). This system call is just a wrapper. It simply calls the real
     implementation yield() and return 0.
     
-   # Lottery scheduler
+# Lottery scheduler
     Most of the code for the scheduler is quite localized and can be found in proc.c; the associated
     header file, proc.h is also quite useful to examine. To change the scheduler, not much needs to
     be done; study its control flow and then try some small changes.
@@ -58,11 +58,11 @@ You'll need three new system calls to implement this scheduler.
     tickets, and calls fork() to create a child process, the child should also get 10 tickets.
     
 # Supplied Test Programs
-  # ps.c
+  ps.c
     We have supplied ps.c which is a test program which runs getpinfo and outputs the
      information in the struct.
      
-  # lotteryTest.c
+  lotteryTest.c
     We have supplied lotteryTest.c which is a test program which:
       • takes as command line arguments an amount of time to run for followed by a list of numbers
       of tickets to assign to each subprocess. Each subprocess runs an infinite loop and is killed
@@ -82,12 +82,12 @@ You'll need three new system calls to implement this scheduler.
     add _ps and _lotteryTest to the UPROGS definition in Makefile.
     
 # Hints
-  # Reading on Lottery Scheduling
+  Reading on Lottery Scheduling
     1. For an alternate explanation to the lottery scheduler, see Chapter 9 of Arpaci-Dusseau
     (especially Figure 9.1).
-  # Reading on xv6’s scheduler
+  Reading on xv6’s scheduler
     1. Read Chapter 5 of the xv6 book for documentation on xv6’s existing scheduler.
-  # Suggested order of operations
+Suggested order of operations
     1. Implement settickets , but don’t actually use ticket counts for anything.
     2. Implement getpinfo . Use the ps.c to verify that it works.
     3. Add tracking of the number of ticks a process runs. Use the ps.c to verify that it works.
