@@ -96,9 +96,9 @@ You'll need three new system calls to implement this scheduler:
   You will need to create at least three subprocesses to test the lottery scheduler. 
   
   In your report, you will should include at least the following tests:</br>
-    • lotteryTest 1000 500 400 100 50 10
-    • lotteryTest 2000 200 200 200 100 100 200
-    • lotteryTest 2000 10 20 50 100 200 300
+    • lotteryTest 1000 500 400 100 50 10</br>
+    • lotteryTest 2000 200 200 200 100 100 200</br>
+    • lotteryTest 2000 10 20 50 100 200 300</br>
     
   In order to make your new ps and lotteryTest programs available to run from the xv6 shell, dd _ps and _lotteryTest to the UPROGS definition in Makefile.
   
@@ -134,16 +134,13 @@ You'll need three new system calls to implement this scheduler:
   1. You will need to add a psuedorandom number generator to the kernel. We’ve supplied a
   Multiply-with-carry pseudorandom number generator (random.h). To use it, you will
   need to initialize it first with srand(seed)and then call rand() % (MAX + 1),
-  which will generate an random integer number between 0 and MAX.
-  
+  which will generate an random integer number between 0 and MAX.  
   2. It is okay if your pseudorandom number generator uses a fixed seed. But if you don’t want
   to do this xv6 has a function cmostime that reads the current time of day.
-  
   3. The logic in schedule implements a round-robin scheduling algorithm, by iterating
   through all processes, scheduling each one as it iterates though them. You most likely will
   modify it to instead, iterate through almost all processes each time a new process needs to
   be scheduled to choose which one to run.
-  
   4. getpinfo provides you the information you need to test that your lottery scheduler
   behaves correctly. You will not need it in the implementation of the scheduler itself.
   5. When there are no runnable processes, your scheduler should release the process table lock
@@ -151,16 +148,11 @@ You'll need three new system calls to implement this scheduler:
   that lock and iterate through the process table again.
   
 # 8) Identifying panics
-  If xv6 prints a message containing something like panic: acquire, this means that
+  1. If xv6 prints a message containing something like panic: acquire, this means that
   something called panic("acquire").
-  
-  The panic() function stops the OS, printing out an error message. 
-  
-  Generally, these panics are caused by assertions in the xv6 code, checking the current state is consistent.
-  
-  Most xv6 panic messages include the name of the function that called panic, so you can often search for that function name and see when it called panic.
-  
-  In general, you can get grep the xv6 code to find out what exactly the cause was.
-  
-  For example, panic("acquire"); appears in acquire() in spinlock.c.
-  It is called if a thread tries to acquire a spinlock that the current thread already holds.
+  2. The panic() function stops the OS, printing out an error message. 
+  3. Generally, these panics are caused by assertions in the xv6 code, checking the current state is consistent. 
+  4. Most xv6 panic messages include the name of the function that called panic, so you can often search for that function name and see when it called panic. 
+  5. In general, you can get grep the xv6 code to find out what exactly the cause was.  
+  6. For example, panic("acquire"); appears in acquire() in spinlock.c.
+  7. It is called if a thread tries to acquire a spinlock that the current thread already holds.
