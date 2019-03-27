@@ -17,30 +17,31 @@ for that time slice.
   3) To change that scheduler to a new algorithm.
   
 # Main Tasks
-You'll need three new system calls to implement this scheduler.
+You'll need three new system calls to implement this scheduler:
 
   # 1) System call, settickets
-  The first is <b>int settickets(int number)</b>, which sets the number of tickets of the calling process.
+  The first is int settickets(int number), which sets the number of tickets of the calling process.
   
-  By default, processes should have <b>10 tickets</b>; You can assume that the <b>maximum</b> number of tickets per process is 100000</b>.
+  By default, processes should have <b>10 tickets.
+  
+  You can assume that the <b>maximum number of tickets per process is 100000.
   
   The number of tickets should be inherited by children created via fork.
   
-  This routine should return 0 if successful, and -1 otherwise.
-  
-  If, for example, the caller passes in a number less than one or more than 100000).
+  This routine should return 0 if successful, and -1 otherwise (If, for example, the caller passes in a number less than one or more than 100000).
 
   # 2) System call, getpinfo
-  The second is <b>int getpinfo(struct pstat *)</b>. 
+  The second is int getpinfo(struct pstat *). 
   
-  This routine <i>returns some information about all running processes</i>, including <b>how many times each has been chosen to run and the process ID of each.</b>
+  This routine returns some information about all running processes, including <b>how many times each has been chosen to run and the process ID of each.
+  
   You can use this system call to build a variant of the command line program ps, which can then be called to see what is going on. 
   
-  The structure pstat is defined below; <b>note</b>, <i>you cannot change this structure, and must use it exactly as is.</i>
+  The structure pstat is defined below; note, you cannot change this structure, and must use it exactly as is.
   
-  This routine should return 0 if successful, and -1 otherwise <i>(if, for example, a bad or NULL pointer is passed into the kernel).
+  This routine should return 0 if successful, and -1 otherwise(if, for example, a bad or NULL pointer is passed into the kernel).
 
-  The structure should look like what you see here, in a file you'll have to include called pstat.h:</br>
+  The structure should look like what you see here, in a file you'll have to include called pstat.h:
   
     #ifndef _PSTAH_H_
     #define _PSTAT_H_
@@ -79,14 +80,11 @@ You'll need three new system calls to implement this scheduler.
   # 2) lotteryTest.c
   We have supplied lotteryTest.c which is a test program which:
   
-  Takes as command line arguments an amount of time to run for followed by a list of numbers
-  of tickets to assign to each subprocess. 
+  Takes as command line arguments an amount of time to run for followed by a list of numbers of tickets to assign to each subprocess. 
   
-  Each subprocess runs an infinite loop and is killed
-  after running of the designated amount of time.
+  Each subprocess runs an infinite loop and is killed after running of the designated amount of time.
   
-  Outputs a table of the programs in order, with the number of tickets assigned to each and the
-  number of ticks it ran, as reported by getpinfo.
+  Outputs a table of the programs in order, with the number of tickets assigned to each and the number of ticks it ran, as reported by getpinfo.
   
   Reports an error if getpinfo
     o the num_processes field returned is negative or exceeds NPROC
@@ -102,45 +100,35 @@ You'll need three new system calls to implement this scheduler.
     • lotteryTest 2000 200 200 200 100 100 200
     • lotteryTest 2000 10 20 50 100 200 300
     
-  In order to make your new ps and lotteryTest programs available to run from the xv6 shell,
-  add _ps and _lotteryTest to the UPROGS definition in Makefile.
-    
+  In order to make your new ps and lotteryTest programs available to run from the xv6 shell, dd _ps and _lotteryTest to the UPROGS definition in Makefile.
+  
 # Hints
 # 1) Reading on Lottery Scheduling
-  1. For an alternate explanation to the lottery scheduler, see Chapter 9 of Arpaci-Dusseau
-  (especially Figure 9.1).
+  1. For an alternate explanation to the lottery scheduler, see Chapter 9 of Arpaci-Dusseau (especially Figure 9.1).
   
 # 2) Reading on xv6’s scheduler
   1. Read Chapter 5 of the xv6 book for documentation on xv6’s existing scheduler.
   
 # 3) Suggested order of operations
-  1. Implement settickets , but don’t actually use ticket counts for anything.
-  2. Implement getpinfo . Use the ps.c to verify that it works.
+  1. Implement settickets, but don’t actually use ticket counts for anything.
+  2. Implement getpinfo. Use the ps.c to verify that it works.
   3. Add tracking of the number of ticks a process runs. Use the ps.c to verify that it works.
   4. Implement the lottery scheduling algorithm. Use the lotteryTest.c to test it.
   
 # 4) Tracking the number of ticks a process has been running
-  1. proc.h contains xv6’s process control block, to which you should add a member variable
-  to track the number of ticks a process has used.
-  2. You may need to modify fork (in proc.c) or related functions to make sure the tick
-  count and the number of tickets are initialized correctly.
+  1. proc.h contains xv6’s process control block, to which you should add a member variable to track the number of ticks a process has used.
+  2. You may need to modify fork (in proc.c) or related functions to make sure the tick count and the number of tickets are initialized correctly.
   
 # 5) Adding settickets
-  1. You can use argint to retrieve the integer argument to your system call.
-  (Making sys_setticketstake an argument will not work.)
-  2. Like for tracking the number of ticks a process has been running, you will need to edit the
-  process control block in proc.h .
+  1. You can use argint to retrieve the integer argument to your system call. (Making sys_setticketstake an argument will not work).
+  2. Like for tracking the number of ticks a process has been running, you will need to edit the process control block in proc.h.
   3. Follow the example of similar system calls in sysproc.c.
   
 # 6) Adding getpinfo
   1. You can use the argptr to retrieve the pointer argument in your system call handler.
   2. You should iterate through the process list ptable , skipping over UNUSED processes.
-  3. Look at the code for kill in proc.c for an example of how to search through the list of
-  processes by pid .
-  4. Before and after accessing the process table (ptable ), you should
-  acquire ptable.lock and afterwards you should release it. You can see an example of
-  this in kill in proc.c. This will keep you from running into problems if a process is
-  removed while you are iterating through the process table.
+  3. Look at the code for kill in proc.c for an example of how to search through the list of processes by pid.
+  4. Before and after accessing the process table (ptable ), you should acquire ptable.lock and afterwards you should release it. You can see an example of this in kill in proc.c. This will keep you from running into problems if a process is removed while you are iterating through the process table.
   
 # 7) Adding the lottery scheduling algorithm
   1. You will need to add a psuedorandom number generator to the kernel. We’ve supplied a
