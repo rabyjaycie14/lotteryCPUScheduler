@@ -3,10 +3,10 @@ Operating Systems | University of Michigan-Dearborn | Dearborn, MI | 2019 </br>
 <i>All verbiage in this document (unless otherwise stated) was provided by Professor Guo at University of Michigan-Dearborn.</i>
 
 # Description
-In this project, you'll implement a simpler version of lottery CPU scheduler in xv6. The basic
-idea is simple: assign each running process a slice of the processor based in proportion to the
-number of tickets it has; the more tickets a process has, the more it runs. Each time slice, a
-randomized lottery determines the winner of the lottery; that winning process is the one that runs
+In this project, you'll implement a simpler version of lottery CPU scheduler in xv6.</br>
+The basic idea is simple: <b>assign each running process a slice of the processor based in proportion to the
+number of tickets it has; the more tickets a process has, the more it runs.</b></br>
+Each time slice, a randomized lottery determines the winner of the lottery; that winning process is the one that runs
 for that time slice.
 
 # Objectives
@@ -17,19 +17,17 @@ for that time slice.
 # Main Tasks
 You'll need three new system calls to implement this scheduler.
   # 1) System call, settickets
-      The first is int settickets(int number), which sets the number of tickets of the calling process.
-      By default, processes should have 10 tickets. You can assume that the maximum number of
-      tickets per process is 100000. The number of tickets should be inherited by children created via
-      fork. This routine should return 0 if successful, and -1 otherwise (if, for example, the caller
-      passes in a number less than one or more than 100000).
+      The first is <b>int settickets(int number)</b>, which <i>sets the number of tickets of the calling process.</i></br>
+      By default, processes should have <b>10 tickets</b>; You can assume that the <b>maximum</b> number of tickets per process is        100000</b>.</br>
+      The number of tickets should be inherited by children created via fork.</br.
+      This routine should return 0 if successful, and -1 otherwise. <i>If, for example, the caller passes in a number less than one or more than 100000).</i>
 
   # 2) System call, getpinfo
-      The second is int getpinfo(struct pstat *). This routine returns some information about all
-      running processes, including how many times each has been chosen to run and the process ID of
-      each. You can use this system call to build a variant of the command line program ps, which can
-      then be called to see what is going on. The structure pstat is defined below; note, you cannot
-      change this structure, and must use it exactly as is. This routine should return 0 if successful, and
-      -1 otherwise (if, for example, a bad or NULL pointer is passed into the kernel).
+      The second is <b>int getpinfo(struct pstat *)</b>. 
+      This routine <i>returns some information about all running processes</i>, including <b>how many times each has been chosen to run and the process ID of each.</b></br>
+      You can use this system call to build a variant of the command line program ps, which can then be called to see what is going on. </br>
+      The structure pstat is defined below; <b>note</b>, <i>you cannot change this structure, and must use it exactly as is.</i>
+      This routine should return 0 if successful, and -1 otherwise <i>(if, for example, a bad or NULL pointer is passed into the kernel).</i></br>
     
       The structure should look like what you see here, in a file you'll have to include called pstat.h:
           #ifndef _PSTAT_H_
