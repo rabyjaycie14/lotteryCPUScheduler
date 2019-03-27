@@ -24,7 +24,7 @@ You'll need three new system calls to implement this scheduler:
   
   By default, processes should have 10 tickets.
   
-  You can assume that the <b>maximum number of tickets per process is 100000.
+  You can assume that the maximum number of tickets per process is 100000.
   
   The number of tickets should be inherited by children created via fork.
   
@@ -33,7 +33,7 @@ You'll need three new system calls to implement this scheduler:
   # 2) System call, getpinfo
   The second is int getpinfo(struct pstat *). 
   
-  This routine returns some information about all running processes, including <b>how many times each has been chosen to run and the process ID of each.
+  This routine returns some information about all running processes, including how many times each has been chosen to run and the process ID of each.
   
   You can use this system call to build a variant of the command line program ps, which can then be called to see what is going on. 
   
