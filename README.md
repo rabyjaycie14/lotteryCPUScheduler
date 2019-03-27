@@ -22,7 +22,7 @@ You'll need three new system calls to implement this scheduler:
   # 1) System call, settickets
   The first is int settickets(int number), which sets the number of tickets of the calling process.
   
-  By default, processes should have <b>10 tickets.
+  By default, processes should have 10 tickets.
   
   You can assume that the <b>maximum number of tickets per process is 100000.
   
