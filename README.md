@@ -1,5 +1,6 @@
 # lotteryCPUScheduler
 Operating Systems | University of Michigan-Dearborn | Dearborn, MI | 2019
+    All verbiage in this document (unless otherwise stated) was provided by Professor Guo at University of Michigan-Dearborn.
 
 # Description
 In this project, you'll implement a simpler version of lottery CPU scheduler in xv6. The basic
