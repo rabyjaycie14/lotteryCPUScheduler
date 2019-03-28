@@ -181,10 +181,6 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
-	_hello\
-	_date\
-	_ps\
-	_lotteryTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

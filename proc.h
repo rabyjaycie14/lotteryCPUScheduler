@@ -13,6 +13,7 @@ struct cpu {
 extern struct cpu cpus[NCPU];
 extern int ncpu;
 
+
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
 // Don't need to save all the segment registers (%cs, etc),
@@ -48,9 +49,9 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
-  char name[16];               // Process name (debugging)
-  int tickets;				   // Number of tickets a process has
-  int ticks;				   // Number of ticks a process has used
+  char name[16];               // Process name (debugging) 
+  int tickets;		       // number of tickets in the lottery
+  int ticks;		       //number of ticks processor uses
 };
 
 // Process memory is laid out contiguously, low addresses first:
