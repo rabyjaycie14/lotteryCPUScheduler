@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
 
 struct {
   struct spinlock lock;
@@ -533,4 +534,27 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+// Get information about current running process
+// Should be given a struct to give the info back in
+int
+getpinfo(struct pstat *pinfo)
+{
+	struct proc *p;
+	if(argptr(0, (void*)&pinfo, sizeof(*pinfo)) < 0) {
+		return -1;
+	}
+	acquire(&ptable.lock);
+	pinfo->num_processes = 0;
+	for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+		if(p->state != UNUSED) {
+			pinfo->pid[pinfo->num_processes] = p->pid;
+      		pinfo->ticks[pinfo->num_processes] = p->ticks;
+      		pinfo->tickets[pinfo->num_processes] = p->tickets;
+      		pinfo->num_processes++;
+		}
+	}
+	release(&ptable.lock);
+	return 0;
 }

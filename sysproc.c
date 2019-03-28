@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "pstat.h"
 
 int
 sys_fork(void)
@@ -118,4 +119,16 @@ sys_settickets(void)
 	} else {
 		return -1;
 	}
+}
+
+// Get information about current running process
+// Should be given a struct to give the info back in
+int
+sys_getpinfo(void)
+{
+	struct pstat *pinfo;
+	if(argptr(0, (void*)&pinfo, sizeof(*pinfo)) < 0) {
+		return -1;
+	}
+	return getpinfo(pinfo);
 }
