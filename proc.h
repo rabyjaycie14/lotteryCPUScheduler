@@ -1,3 +1,5 @@
+#define DEFAULT_TICKETS 10
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID
@@ -49,8 +51,8 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-  int tickets;				   // Number of tickets a process has
-  int ticks;				   // Number of ticks a process has used
+  int tickets;		       // number of tickets in the lottery
+  int ticks;		       //number of ticks processor uses
 };
 
 // Process memory is laid out contiguously, low addresses first:

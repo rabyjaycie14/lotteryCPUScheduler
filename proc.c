@@ -6,6 +6,9 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
+#include "random.h"
+#include "date.h"
 
 struct {
   struct spinlock lock;
@@ -82,6 +85,7 @@ allocproc(void)
     if(p->state == UNUSED)
       goto found;
 
+  // p->ctime = ticks
   release(&ptable.lock);
   return 0;
 
@@ -105,12 +109,12 @@ found:
   // Set up new context to start executing at forkret,
   // which returns to trapret.
   sp -= 4;
-  *(uint*)sp = (uint)trapret;
+  *(unsigned int*)sp = (unsigned int)trapret;
 
   sp -= sizeof *p->context;
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
-  p->context->eip = (uint)forkret;
+  p->context->eip = (unsigned int)forkret;
 
   return p;
 }
@@ -138,6 +142,8 @@ userinit(void)
   p->tf->eflags = FL_IF;
   p->tf->esp = PGSIZE;
   p->tf->eip = 0;  // beginning of initcode.S
+  p->tickets = DEFAULT_TICKETS;
+  p->ticks=0;
 
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
@@ -158,7 +164,7 @@ userinit(void)
 int
 growproc(int n)
 {
-  uint sz;
+  unsigned int  sz;
   struct proc *curproc = myproc();
 
   sz = curproc->sz;
@@ -199,8 +205,9 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
-  np->tickets = curproc->tickets;
-  np->ticks = 0;
+
+  np->tickets = curproc->tickets; // inherit tickets from parent
+  np->ticks = 0; // restart ticks for child
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -296,6 +303,7 @@ wait(void)
         p->parent = 0;
         p->name[0] = 0;
         p->killed = 0;
+        //p->ctime=0;
         p->state = UNUSED;
         release(&ptable.lock);
         return pid;
@@ -327,20 +335,42 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
+ 
+  struct rtcdate r;
+  cmostime(&r);
+  srand(r.second);
   
+  int tot_tickets = 0;
+  unsigned int rando = rand() % (tot_tickets+1);
+
   for(;;){
     // Enable interrupts on this processor.
     sti();
 
-    // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    // loop thru ptable to tally up total # tickets
+    int tot_tickets = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+      
+      tot_tickets += p->tickets;
+    }
 
+    // loop again to choose a lotto winner
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE)
+        continue;
+      
+      //if random(0 to tot_tix) < p->tix... WINNER FOUND!!
+      rando = rand() % (tot_tickets+1);
+      if (rando >= p->tickets)
+        continue;
+      
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
+      p->ticks++;
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
@@ -353,7 +383,6 @@ scheduler(void)
       c->proc = 0;
     }
     release(&ptable.lock);
-
   }
 }
 
@@ -516,7 +545,7 @@ procdump(void)
   int i;
   struct proc *p;
   char *state;
-  uint pc[10];
+  unsigned int  pc[10];
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->state == UNUSED)
@@ -527,10 +556,46 @@ procdump(void)
       state = "???";
     cprintf("%d %s %s", p->pid, state, p->name);
     if(p->state == SLEEPING){
-      getcallerpcs((uint*)p->context->ebp+2, pc);
+      getcallerpcs((unsigned int *)p->context->ebp+2, pc);
       for(i=0; i<10 && pc[i] != 0; i++)
         cprintf(" %p", pc[i]);
     }
     cprintf("\n");
   }
+}
+
+int settickets(int tickets) {
+  struct proc* p;
+  struct proc* curproc = myproc();
+  acquire(&ptable.lock);
+  
+  if (tickets>100000) return -1; //MAX TICKETS
+  for (p=ptable.proc; p<&ptable.proc[NPROC]; p++) {
+    if (p->pid == curproc->pid) {
+      p->tickets = tickets;
+      break;
+    }
+  }
+
+  release(&ptable.lock);
+  return 0;
+}
+
+
+int getpinfo(struct pstat *p){
+  struct proc* proc;
+  acquire(&ptable.lock);
+  p->num_processes = 0;
+
+  for (proc = ptable.proc; proc < &ptable.proc[NPROC]; proc++){ 
+    if (proc->state != UNUSED){
+      p->pid[p->num_processes] = proc->pid;
+      p->ticks[p->num_processes] = proc->ticks;
+      p->tickets[p->num_processes] = proc->tickets;
+      p->num_processes++;
+    }
+  }
+
+  release(&ptable.lock);
+  return 0;
 }

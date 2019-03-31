@@ -6,6 +6,10 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "pstat.h"
+
+extern int settickets(int);
+extern int getpinfo(struct pstat*);
 
 int
 sys_fork(void)
@@ -90,32 +94,24 @@ sys_uptime(void)
   return xticks;
 }
 
-// Give the current date from CMOS clock
-// Should be passed a RTCDate struct to give data back in
 int
-sys_date(void)
-{
-	struct rtcdate *r;
-
-	if(argptr(0, (void*)&r, sizeof(*r)) < 0) {
-		return -1;
-	}
-	cmostime(r);
-	return 0;
+sys_settickets(void){
+  int tickets;
+  if (argint(0, &tickets) < 0) return -1;
+  return settickets(tickets);
 }
 
-// Sets number of tickets for a process
-// number is number of tickets for a process
 int
-sys_settickets(void)
-{
-	int number;
-	argint(0, &number);
-	if(number > 0 && number < 100000) {
-		struct proc *curproc = myproc();
-		curproc->tickets = number;
-		return 0;
-	} else {
-		return -1;
-	}
+sys_getpinfo(void){
+  struct pstat* p;
+  if (argptr(0,(void*)&p,sizeof(struct pstat*)) < 0) return -1;
+  return getpinfo(p);
+
+}
+
+int
+sys_yield(void){
+  yield();
+  return 0;
+
 }
