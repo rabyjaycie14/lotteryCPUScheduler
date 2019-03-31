@@ -7,6 +7,8 @@
 #include "proc.h"
 #include "spinlock.h"
 #include "pstat.h"
+#include "date.h"
+#include "random.h"
 
 struct {
   struct spinlock lock;
@@ -328,6 +330,12 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
+
+  struct rtcdate r;
+  cmostime(&r);
+  unsigned int randnum = r.second + r.minute + r.hour + r.day + r.month + r.year;
+  srand(randnum);
+  rand();
   
   for(;;){
     // Enable interrupts on this processor.

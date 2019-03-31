@@ -132,3 +132,10 @@ sys_getpinfo(void)
 	}
 	return getpinfo(pinfo);
 }
+
+int
+sys_yield(void)
+{
+	yield();
+	return 0;
+}

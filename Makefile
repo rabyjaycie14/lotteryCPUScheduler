@@ -184,6 +184,7 @@ UPROGS=\
 	_hello\
 	_date\
 	_ps\
+	_lotteryTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

@@ -27,6 +27,7 @@ int uptime(void);
 int date(struct rtcdate*);
 int settickets(int);
 int getpinfo(struct pstat*);
+int yield(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

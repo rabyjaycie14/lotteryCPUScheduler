@@ -106,6 +106,7 @@ extern int sys_uptime(void);
 extern int sys_date(void);
 extern int sys_settickets(void);
 extern int sys_getpinfo(void);
+extern int sys_yield(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    		sys_fork,
@@ -132,6 +133,7 @@ static int (*syscalls[])(void) = {
 [SYS_date]    		sys_date,
 [SYS_settickets]	sys_settickets,
 [SYS_getpinfo]		sys_getpinfo,
+[SYS_yield]			sys_yield,
 };
 
 void
