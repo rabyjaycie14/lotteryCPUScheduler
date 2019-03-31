@@ -7,6 +7,10 @@
 #include "mmu.h"
 #include "proc.h"
 #include "pstat.h"
+#include "random.h"
+
+extern int settickets(int);
+extern int getpinfo(struct pstat*);
 
 int
 sys_fork(void)
@@ -92,25 +96,10 @@ sys_uptime(void)
 }
 
 int
-sys_date(void){
-	struct rtcdate *st;
-	if(argptr(0,(void*)&st,sizeof(struct rtcdate)) < 0)
-		return -1;
-	cmostime(st);
-	return 0;
-}
-
-int
 sys_settickets(void){
-	int number;
-	argint(0, &number);
-	if(number > 0 && number < 100000) {
-		struct proc *curproc = myproc();
-		curproc->tickets = number;
-		return 0;
-	} else {
-		return -1;
-	}
+  int tickets;
+  if (argint(0, &tickets) < 0) return -1;
+  return settickets(tickets);
 }
 
 int
@@ -127,4 +116,3 @@ sys_yield(void){
   return 0;
 
 }
-

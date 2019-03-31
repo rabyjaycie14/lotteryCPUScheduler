@@ -1,3 +1,5 @@
+#define DEFAULT_TICKETS 10
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID
@@ -12,7 +14,6 @@ struct cpu {
 
 extern struct cpu cpus[NCPU];
 extern int ncpu;
-
 
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
@@ -49,7 +50,7 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
-  char name[16];               // Process name (debugging) 
+  char name[16];               // Process name (debugging)
   int tickets;		       // number of tickets in the lottery
   int ticks;		       //number of ticks processor uses
 };

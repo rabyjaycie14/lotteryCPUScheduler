@@ -10,6 +10,7 @@ struct pstat {
 	int ticks[NPROC];  // the number of ticks each process has accumulated
 };
 
-extern int getpinfo(struct pstat* p); //make visible to outside
+extern int getpinfo(struct pstat* p); //make struct visible to getpinfo
+extern int settickets(int tickets); //make tickets visible to settickets
 
 #endif // _PSTAT_H_
