@@ -7,7 +7,6 @@
 #include "mmu.h"
 #include "proc.h"
 #include "pstat.h"
-#include "random.h"
 
 extern int settickets(int);
 extern int getpinfo(struct pstat*);

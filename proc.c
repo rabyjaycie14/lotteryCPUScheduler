@@ -10,7 +10,6 @@
 #include "random.h"
 #include "date.h"
 
-
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -340,6 +339,9 @@ scheduler(void)
   struct rtcdate r;
   cmostime(&r);
   srand(r.second);
+  
+  int tot_tickets = 0;
+  unsigned int rando = rand() % (tot_tickets+1);
 
   for(;;){
     // Enable interrupts on this processor.
@@ -361,7 +363,7 @@ scheduler(void)
         continue;
       
       //if random(0 to tot_tix) < p->tix... WINNER FOUND!!
-      unsigned rando = rand() % (tot_tickets+1);
+      rando = rand() % (tot_tickets+1);
       if (rando >= p->tickets)
         continue;
       
